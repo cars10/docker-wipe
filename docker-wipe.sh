@@ -26,6 +26,7 @@ function removeContainers {
   echo '# Looking for containers to remove...'
   if [[ $(docker ps -a -q) ]]; then
     echo "# Found containers. Deleting..."
+    docker stop $(docker ps -a -q)
     docker rm $(docker ps -a -q)
     echo "# Deleted all containers."
   else
