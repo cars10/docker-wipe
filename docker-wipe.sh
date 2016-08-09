@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # License: MIT
 #########################
 ## Docker-wipe script ##
