@@ -113,7 +113,7 @@ case "$1" in
     if [[ $CONFIRM == 'y' ]]; then
       removeAll
     else
-      echo '# Delet all containers, images and volumes? [y/n]'
+      echo '# Delete all containers, images and volumes? [y/n]'
       read -n 1 AGREE
       if [[ $AGREE == 'y' ]]; then
         echo ''
