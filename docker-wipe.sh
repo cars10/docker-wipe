@@ -23,46 +23,46 @@ CONFIRM=$2
 
 # Removes all containers
 function removeContainers {
-  echo '# Looking for containers to remove...'
+  echo -n '# Looking for containers to remove... '
   if [[ $(docker ps -a -q) ]]; then
-    echo "# Found containers. Deleting..."
+    echo "Found containers. Deleting..."
     docker stop $(docker ps -a -q)
     docker rm $(docker ps -a -q)
     echo "# Deleted all containers."
+    echo ''
   else
-      echo "# No containers found, nothing to delete!"
+      echo "No containers found, nothing to delete!"
   fi
-  echo ''
 }
 
 # Removes all images
 function removeImages {
-  echo '# Looking for images to remove...'
+  echo -n '# Looking for images to remove... '
   if [[ $(docker images -q) ]]; then
-    echo "# Found images. Deleting..."
+    echo "Found images. Deleting..."
     docker rmi -f $(docker images -q)
     echo "# Deleted all images."
+    echo ''
   else
-      echo "# No images found, nothing to delete!"
+      echo "No images found, nothing to delete!"
   fi
-  echo ''
 }
 
 # Removes all volumes
 function removeVolumes {
-  echo '# Looking for volumes to remove...'
+  echo -n '# Looking for volumes to remove... '
   if [[ $(docker volume ls -q) ]]; then
-    echo "# Found volumes. Deleting..."
+    echo "Found volumes. Deleting..."
     docker volume rm $(docker volume ls -q)
     echo "# Deleted all volumes."
+    echo ''
   else
-      echo "# No volumes found, nothing to delete!"
+      echo "No volumes found, nothing to delete!"
   fi
-  echo ''
 }
 
 function removeAll {
-  echo '# Removing everything.'
+  echo '## Removing everything.'
   echo ''
   removeImages
   removeContainers
@@ -140,5 +140,7 @@ case "$1" in
 	  exit 1
 esac
 
-echo "## Finished. ##"
+echo ''
+echo '## Finished. ##'
+echo ''
 exit 0
