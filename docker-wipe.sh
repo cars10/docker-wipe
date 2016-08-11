@@ -40,7 +40,7 @@ function removeImages {
   echo '# Looking for images to remove...'
   if [[ $(docker images -q) ]]; then
     echo "# Found images. Deleting..."
-    docker rmi $(docker images -q)
+    docker rmi -f $(docker images -q)
     echo "# Deleted all images."
   else
       echo "# No images found, nothing to delete!"
