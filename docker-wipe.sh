@@ -31,7 +31,7 @@ function removeContainers {
     echo "# Deleted all containers."
     echo ''
   else
-      echo "No containers found, nothing to delete!"
+    echo "No containers found, nothing to delete!"
   fi
 }
 
@@ -44,7 +44,7 @@ function removeImages {
     echo "# Deleted all images."
     echo ''
   else
-      echo "No images found, nothing to delete!"
+    echo "No images found, nothing to delete!"
   fi
 }
 
@@ -57,7 +57,7 @@ function removeVolumes {
     echo "# Deleted all volumes."
     echo ''
   else
-      echo "No volumes found, nothing to delete!"
+    echo "No volumes found, nothing to delete!"
   fi
 }
 
@@ -69,7 +69,7 @@ function removeAll {
   removeVolumes
 }
 
-#=== entry ===
+#=== entry point ===
 echo '## Docker-wipe script ###'
 
 case "$1" in
@@ -137,6 +137,7 @@ case "$1" in
     echo 'Examples:'
     echo $"$0 containers    - delete all containers"
     echo $"$0 containers y  - delete all containers without confirmation"
+    echo ''
 	  exit 1
 esac
 
