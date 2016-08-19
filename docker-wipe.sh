@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-# License: MIT
 #########################
 ## Docker-wipe script ##
 #########################
+# @license: MIT
+# @author Carsten König - carstenkoenig92@gmail.com
+# @repo_url https://github.com/cars10/docker-wipe 
+#
 # Script to cleanup your local docker installation - meaning your data, not the actual installation.
 # Provides functions to delete all images, containers, volumes (use with care!) or all of it.
 # usage:
