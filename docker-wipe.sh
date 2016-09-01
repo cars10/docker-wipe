@@ -4,11 +4,12 @@
 #########################
 # @license: MIT
 # @author Carsten König - carstenkoenig92@gmail.com
-# @repo_url https://github.com/cars10/docker-wipe 
+# @repo_url https://github.com/cars10/docker-wipe
 #
 # Script to cleanup your local docker installation - meaning your data, not the actual installation.
 # Provides functions to delete all images, containers, volumes (use with care!) or all of it.
-# usage:
+#
+# Usage:
 # ./docker-wipe.sh {containers|images|volumes|all} {parameter}
 # Commands:
 #   containers   - delete all containers
@@ -27,10 +28,11 @@ CONFIRM=$2
 # Removes all containers
 function removeContainers {
   echo -n '# Looking for containers to remove... '
+  # only delete if there are any containers
   if [[ $(docker ps -a -q) ]]; then
     echo "Found containers. Deleting..."
-    docker stop $(docker ps -a -q)
-    docker rm $(docker ps -a -q)
+    docker stop $(docker ps -a -q) # stop all containers before deleting them
+    docker rm $(docker ps -a -q)   # delete all containers
     echo "# Deleted all containers."
     echo ''
   else
@@ -41,10 +43,24 @@ function removeContainers {
 # Removes all images
 function removeImages {
   echo -n '# Looking for images to remove... '
+  # only delete if there are images
   if [[ $(docker images -q) ]]; then
     echo "Found images. Deleting..."
+    docker stop $(docker ps -a -q) # stop all containers before deleting them
     docker rmi -f $(docker images -q)
-    echo "# Deleted all images."
+    # sometimes docker fails do delete images, even with the -f flag.
+    # for this case we try to destroy again because that usally works.
+    if [[ $? != 0 ]] && [[ $(docker images -q) ]]; then
+      echo "# Could not delete all images, trying again..."
+      docker rmi -f $(docker images -q)
+      if [[ $? == 0 ]]; then
+        echo "# Deleted all images."
+      else
+        echo "# Could not delete all images, please try to delete them manually."
+      fi
+    else
+      echo "# Deleted all images."
+    fi
     echo ''
   else
     echo "No images found, nothing to delete!"
@@ -54,6 +70,7 @@ function removeImages {
 # Removes all volumes
 function removeVolumes {
   echo -n '# Looking for volumes to remove... '
+  # only delete if there are volumes
   if [[ $(docker volume ls -q) ]]; then
     echo "Found volumes. Deleting..."
     docker volume rm $(docker volume ls -q)
