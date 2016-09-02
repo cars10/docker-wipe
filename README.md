@@ -1,6 +1,6 @@
 # docker-wipe.sh
 This is a script to cleanup your local docker installation - meaning your data, not the actual installation.
-It provides functions to delete all images, containers, volumes (use with care!) or all of it.
+It provides functions to delete all images, containers, networks, volumes (use with care!) or all of it.
 
 ## Usage
 ```bash
@@ -9,7 +9,8 @@ Commands:
   containers   - delete all containers
   images       - delete all images
   volumes      - delete all volumes
-  all          - delete all containers, images and volumes
+  networks     - delete all networks
+  all          - delete all containers, images, networks and volumes
 Parameter:
   y - pass this to disable confirmation message and automatically destroy
 ```
