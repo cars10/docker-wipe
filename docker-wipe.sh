@@ -7,15 +7,16 @@
 # @repo_url https://github.com/cars10/docker-wipe
 #
 # Script to cleanup your local docker installation - meaning your data, not the actual installation.
-# Provides functions to delete all images, containers, volumes (use with care!) or all of it.
+# Provides functions to delete all images, containers, networks volumes (use with care!) or all of it.
 #
 # Usage:
-# ./docker-wipe.sh {containers|images|volumes|all} {parameter}
+# ./docker-wipe.sh {containers|images|volumes|networks|all} {parameter}
 # Commands:
 #   containers   - delete all containers
 #   images       - delete all images
 #   volumes      - delete all volumes
-#   all          - delete all containers, images and volumes
+#   networks     - delete all networks
+#   all          - delete all containers, images, networks and volumes
 # Parameter:
 #   y - pass this to disable confirmation message and automatically destroy
 
@@ -81,12 +82,26 @@ function removeVolumes {
   fi
 }
 
+# remove all networks
+function removeNetworks {
+  echo -n '# Looking for networks to remove...'
+  if [[ $(docker network ls -q) ]]; then
+    echo "Found networks. Deleting..."
+    docker network rm $(docker network ls -q)
+    echo "# Deleted all networks."
+    echo ''
+  else
+    echo "No networks found, nothing to delete!"
+  fi
+}
+
 function removeAll {
   echo '## Removing everything.'
   echo ''
   removeImages
   removeContainers
   removeVolumes
+  removeNetworks
 }
 
 #=== entry point ===
@@ -129,6 +144,18 @@ case "$1" in
       fi
     fi
 	  ;;
+  networks)
+    if [[ $CONFIRM == 'y' ]]; then
+      removeNetworks
+    else
+      echo '# Delete all networks? [y/n]'
+      read -n 1 AGREE
+      if [[ $AGREE == 'y' ]]; then
+        echo ''
+        removeNetworks
+      fi
+    fi
+	  ;;
   all)
     if [[ $CONFIRM == 'y' ]]; then
       removeAll
@@ -149,7 +176,8 @@ case "$1" in
     echo '  containers   - delete all containers'
     echo '  images       - delete all images'
     echo '  volumes      - delete all volumes'
-    echo '  all          - delete all containers, images and volumes'
+    echo '  networks     - delete all networks'
+    echo '  all          - delete all containers, images, networks and volumes'
     echo ''
     echo 'Parameter:'
     echo '  y - pass this to disable confirmation message and automatically destroy'
