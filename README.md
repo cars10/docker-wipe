@@ -4,7 +4,7 @@ It provides functions to delete all images, containers, networks, volumes (use w
 
 ## Usage
 ```bash
-./docker-wipe.sh {containers|images|volumes|all} {parameter}
+./docker-wipe.sh {containers|images|networks|volumes|all} {parameter}
 Commands:
   containers   - delete all containers
   images       - delete all images
