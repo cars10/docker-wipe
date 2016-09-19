@@ -101,11 +101,11 @@ function removeNetworks {
     stopContainers
 
     for id in "${network_ids[@]}"; do
-  		network_name=$(docker network inspect -f '{{json .Name}}' $id)
-  		if [[ $network_name != '"bridge"' ]] && [[ $network_name != '"host"' ]] && [[ $network_name != '"none"' ]]; then
+      network_name=$(docker network inspect -f '{{json .Name}}' $id)
+      if [[ $network_name != '"bridge"' ]] && [[ $network_name != '"host"' ]] && [[ $network_name != '"none"' ]]; then
         docker network rm $id
-  		fi
-  	done
+      fi
+    done
 
     echo "# Deleted all networks."
     echo ''
@@ -128,7 +128,7 @@ echo '## Docker-wipe script ###'
 echo '## Version 0.1.2'
 
 case "$1" in
-	containers)
+  containers)
     if [[ $CONFIRM == 'y' ]]; then
       removeContainers
     else
@@ -139,8 +139,8 @@ case "$1" in
         removeContainers
       fi
     fi
-	  ;;
-	images)
+    ;;
+  images)
     if [[ $CONFIRM == 'y' ]]; then
       removeImages
     else
@@ -151,8 +151,8 @@ case "$1" in
         removeImages
       fi
     fi
-	  ;;
-	volumes)
+    ;;
+  volumes)
     if [[ $CONFIRM == 'y' ]]; then
       removeVolumes
     else
@@ -163,7 +163,7 @@ case "$1" in
         removeVolumes
       fi
     fi
-	  ;;
+    ;;
   networks)
     if [[ $CONFIRM == 'y' ]]; then
       removeNetworks
@@ -175,7 +175,7 @@ case "$1" in
         removeNetworks
       fi
     fi
-	  ;;
+    ;;
   all)
     if [[ $CONFIRM == 'y' ]]; then
       removeAll
@@ -188,10 +188,10 @@ case "$1" in
       fi
     fi
     ;;
-	*)
-		echo 'Wrong or missing parameter.'
+  *)
+    echo 'Wrong or missing parameter.'
     echo ''
-	  echo $"Usage: $0 {containers|images|volumes|all} {parameter}"
+    echo $"Usage: $0 {containers|images|volumes|all} {parameter}"
     echo 'Commands:'
     echo '  containers   - delete all containers'
     echo '  images       - delete all images'
@@ -206,7 +206,7 @@ case "$1" in
     echo $"$0 containers    - delete all containers"
     echo $"$0 containers y  - delete all containers without confirmation"
     echo ''
-	  exit 1
+    exit 1
 esac
 
 echo ''
