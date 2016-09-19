@@ -8,7 +8,7 @@
 # @repo_url https://github.com/cars10/docker-wipe
 #
 # Script to cleanup your local docker installation - meaning your data, not the actual installation.
-# Provides functions to delete all images, containers, networks volumes (use with care!) or all of it.
+# Provides functions to delete all images, containers, networks, volumes (use with care!) or all of it.
 #
 # Usage:
 # ./docker-wipe.sh {containers|images|volumes|networks|all} {parameter}
@@ -92,7 +92,7 @@ function removeVolumes {
 }
 
 # remove all networks
-# we need to check the names: we cannot delete the predevined networks "bridge", "host" and "none"
+# we need to check the names: we cannot delete the predefined networks "bridge", "host" and "none"
 function removeNetworks {
   echo -n '# Looking for networks to remove...'
   if [[ $(docker network ls -q) ]]; then
