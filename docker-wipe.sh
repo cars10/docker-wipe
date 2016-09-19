@@ -4,6 +4,7 @@
 #########################
 # @license: MIT
 # @author Carsten König - carstenkoenig92@gmail.com
+# @version 0.1.2
 # @repo_url https://github.com/cars10/docker-wipe
 #
 # Script to cleanup your local docker installation - meaning your data, not the actual installation.
@@ -32,12 +33,19 @@ function removeContainers {
   # only delete if there are any containers
   if [[ $(docker ps -a -q) ]]; then
     echo "Found containers. Deleting..."
-    docker stop $(docker ps -a -q) # stop all containers before deleting them
+    stopContainers
     docker rm $(docker ps -a -q)   # delete all containers
     echo "# Deleted all containers."
     echo ''
   else
     echo "No containers found, nothing to delete!"
+  fi
+}
+
+# stop all containers if any is running
+function stopContainers {
+  if [[ $(docker ps -a -q) ]]; then
+    docker stop $(docker ps -a -q) # stop all containers
   fi
 }
 
@@ -47,7 +55,7 @@ function removeImages {
   # only delete if there are images
   if [[ $(docker images -q) ]]; then
     echo "Found images. Deleting..."
-    docker stop $(docker ps -a -q) # stop all containers before deleting them
+    stopContainers
     docker rmi -f $(docker images -q)
     # sometimes docker fails do delete images, even with the -f flag.
     # for this case we try to destroy again because that usally works.
@@ -74,6 +82,7 @@ function removeVolumes {
   # only delete if there are volumes
   if [[ $(docker volume ls -q) ]]; then
     echo "Found volumes. Deleting..."
+    stopContainers
     docker volume rm $(docker volume ls -q)
     echo "# Deleted all volumes."
     echo ''
@@ -83,11 +92,21 @@ function removeVolumes {
 }
 
 # remove all networks
+# we need to check the names: we cannot delete the predevined networks "bridge", "host" and "none"
 function removeNetworks {
   echo -n '# Looking for networks to remove...'
   if [[ $(docker network ls -q) ]]; then
     echo "Found networks. Deleting..."
-    docker network rm $(docker network ls -q)
+    IFS=$'\n' read -rd '' -a network_ids <<<"$(docker network ls -q)"
+    stopContainers
+
+    for id in "${network_ids[@]}"; do
+  		network_name=$(docker network inspect -f '{{json .Name}}' $id)
+  		if [[ $network_name != '"bridge"' ]] && [[ $network_name != '"host"' ]] && [[ $network_name != '"none"' ]]; then
+        docker network rm $id
+  		fi
+  	done
+
     echo "# Deleted all networks."
     echo ''
   else
@@ -106,6 +125,7 @@ function removeAll {
 
 #=== entry point ===
 echo '## Docker-wipe script ###'
+echo '## Version 0.1.2'
 
 case "$1" in
 	containers)
